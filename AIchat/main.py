@@ -218,17 +218,17 @@ def interactive_setup() -> tuple[int, str]:
     while True:
         try:
             print("\n📊 トークン上限を選択してください:")
-            print("1. 50,000 tokens (推奨)")
-            print("2. 100,000 tokens")
+            print("1. 20,000 tokens (推奨)")
+            print("2. 50,000 tokens")
             print("3. カスタム")
             
             choice = input("選択 (1-3): ").strip()
             
             if choice == "1":
-                token_limit = 50000
+                token_limit = 20000
                 break
             elif choice == "2":
-                token_limit = 100000
+                token_limit = 50000
                 break
             elif choice == "3":
                 token_limit = int(input("トークン数を入力: "))
