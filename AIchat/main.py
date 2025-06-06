@@ -171,11 +171,15 @@ class ConversationSession:
         
         icon = speaker_icons.get(speaker, "❓")
         
+        # 現在の総トークン数を取得
+        current_total_tokens = self.cost_monitor.get_status_summary()['total_tokens']
+        
         print(f"""
 {icon} {speaker}:
 {'-' * 60}
 {content}
 {'-' * 60}
+📊 {current_total_tokens:,}/{self.token_limit:,} tokens
 """)
     
     def _finalize_session(self):
