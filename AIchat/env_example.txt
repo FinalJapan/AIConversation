@@ -1,0 +1,15 @@
+# APIキー設定ファイル
+# このファイルを .env にリネームして使用してください
+
+# OpenAI (ChatGPT) API キー
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Anthropic (Claude) API キー
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# Google (Gemini) API キー
+GOOGLE_API_KEY=your_google_api_key_here
+
+# デフォルト設定
+DEFAULT_TOKEN_LIMIT=50000
+DEFAULT_THEME=一般的な話題について自由に議論
