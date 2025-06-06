@@ -175,9 +175,7 @@ class ConversationSession:
 {icon} {speaker}:
 {'-' * 60}
 {content}
-
-📊 この発言: {tokens} tokens, ${cost:.4f}
-{self.cost_monitor.format_status_display().strip()}
+{'-' * 60}
 """)
     
     def _finalize_session(self):
@@ -215,7 +213,8 @@ def interactive_setup() -> tuple[int, str]:
     print("=" * 50)
     
     # トークン上限設定
-    while True:
+    token_limit = None
+    while token_limit is None:
         try:
             print("\n📊 トークン上限を選択してください:")
             print("1. 20,000 tokens (推奨)")
@@ -226,29 +225,45 @@ def interactive_setup() -> tuple[int, str]:
             
             if choice == "1":
                 token_limit = 20000
-                break
+                print(f"✅ {token_limit:,} tokensに設定しました")
             elif choice == "2":
                 token_limit = 50000
-                break
+                print(f"✅ {token_limit:,} tokensに設定しました")
             elif choice == "3":
-                token_limit = int(input("トークン数を入力: "))
-                if token_limit <= 0:
-                    print("正の数を入力してください")
+                try:
+                    custom_tokens = input("トークン数を入力してください: ").strip()
+                    token_limit = int(custom_tokens)
+                    if token_limit <= 0:
+                        print("❌ 正の数を入力してください")
+                        token_limit = None
+                        continue
+                    print(f"✅ {token_limit:,} tokensに設定しました")
+                except ValueError:
+                    print("❌ 有効な数字を入力してください")
                     continue
-                break
             else:
-                print("1-3の数字を入力してください")
+                print("❌ 1, 2, 3のいずれかを入力してください")
+                continue
                 
-        except ValueError:
-            print("有効な数字を入力してください")
+        except (EOFError, KeyboardInterrupt):
+            print("\n👋 セットアップがキャンセルされました")
+            sys.exit(0)
+        except Exception as e:
+            print(f"❌ 予期しないエラー: {e}")
+            continue
     
     # テーマ設定
     print("\n🎯 会話テーマを設定してください:")
     print("例: 哲学について議論, SFについて語り合う, 料理のレシピ開発")
     
-    theme = input("テーマ (空白でデフォルト): ").strip()
-    if not theme:
-        theme = "一般的な話題について自由に議論"
+    try:
+        theme = input("テーマ (空白でデフォルト): ").strip()
+        if not theme:
+            theme = "一般的な話題について自由に議論"
+        print(f"✅ テーマ: {theme}")
+    except (EOFError, KeyboardInterrupt):
+        print("\n👋 セットアップがキャンセルされました")
+        sys.exit(0)
     
     return token_limit, theme
 
