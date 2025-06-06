@@ -39,16 +39,24 @@ class BaseLLM(ABC):
 2. 他のAIの発言に対して適切に反応してください  
 3. 新しい観点や質問を提供してください
 4. 簡潔に（500文字以内で）回答してください
-5. あなたの個性を活かした発言をしてください"""
+5. あなたの個性を活かした発言をしてください
+6. 発言に他のAIの名前は含めず、直接応答してください"""
 
         context.append({"role": "system", "content": system_prompt})
         
-        # 過去の会話履歴を追加（最新5件まで）
+        # 過去の会話履歴を追加（最新10件まで）
         recent_messages = previous_messages[-10:] if len(previous_messages) > 10 else previous_messages
         
         for i, msg in enumerate(recent_messages):
+            # 発言者名を除去（「ChatGPT:」「Claude:」「Gemini:」を削除）
+            clean_msg = msg
+            if ": " in msg:
+                parts = msg.split(": ", 1)
+                if parts[0] in ["ChatGPT", "Claude", "Gemini", "会話トピック"]:
+                    clean_msg = parts[1] if len(parts) > 1 else msg
+            
             role = "assistant" if i % 2 == 0 else "user"
-            context.append({"role": role, "content": msg})
+            context.append({"role": role, "content": clean_msg})
         
         return context
 
